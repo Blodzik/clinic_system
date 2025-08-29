@@ -26,8 +26,8 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public void findAppointmentById(int id) {
-        entityManager.find(Appointment.class, id);
+    public Appointment findAppointmentById(int id) {
+        return entityManager.find(Appointment.class, id);
     }
 
     @Override

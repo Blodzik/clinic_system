@@ -26,8 +26,8 @@ public class DoctorDAOImpl implements DoctorDAO {
     }
 
     @Override
-    public void findById(int id) {
-        entityManager.find(Doctor.class, id);
+    public Doctor findById(int id) {
+        return entityManager.find(Doctor.class, id);
     }
 
     @Override

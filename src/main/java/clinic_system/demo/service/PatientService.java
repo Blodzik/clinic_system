@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface PatientService {
     void save(Patient patient);
-    void findById(int id);
+    Patient findById(int id);
     void deleteById(int id);
     List<Patient> findAll();
 }

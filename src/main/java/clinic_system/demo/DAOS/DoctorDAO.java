@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface DoctorDAO {
     void save(Doctor doctor);
-    void findById(int id);
+    Doctor findById(int id);
     void deleteById(int id);
     List<Doctor> findAll();
 }

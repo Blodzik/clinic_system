@@ -25,8 +25,8 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
-    public void findById(int id) {
-        doctorDAO.findById(id);
+    public Doctor findById(int id) {
+        return doctorDAO.findById(id);
     }
 
     @Override
