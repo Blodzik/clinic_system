@@ -1,6 +1,7 @@
 package clinic_system.demo.rest;
 
 import clinic_system.demo.entities.Patient;
+import clinic_system.demo.exception.ResourceNotFoundException;
 import clinic_system.demo.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +26,9 @@ public class PatientRestController {
 
     @GetMapping("/patients/{patientId}")
     public Patient getPatientById(@PathVariable int patientId) {
+        if(patientId < 0 || patientId > patientService.findAll().size()) {
+            throw new ResourceNotFoundException("Patient", patientId);
+        }
         return patientService.findById(patientId);
     }
 
@@ -34,4 +38,6 @@ public class PatientRestController {
 
         patientService.save(patient);
     }
+
+
 }

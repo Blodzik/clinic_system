@@ -4,8 +4,6 @@ import clinic_system.demo.DAOS.AppointmentDAO;
 import clinic_system.demo.DAOS.DoctorDAO;
 import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
-import clinic_system.demo.entities.Doctor;
-import clinic_system.demo.entities.Patient;
 import clinic_system.demo.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,16 +29,6 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public void addAppointment(Appointment appointment) {
-        Doctor doctor = doctorDAO.findById(appointment.getDoctor().getId());
-        Patient patient = patientDAO.findById(appointment.getPatient().getId());
-
-        if (doctor == null || patient == null) {
-            throw new RuntimeException("Invalid doctor or patient");
-        }
-
-        appointment.setDoctor(doctor);
-        appointment.setPatient(patient);
-
         appointmentDAO.addAppointment(appointment);
     }
 

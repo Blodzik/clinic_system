@@ -6,6 +6,7 @@ import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
 import clinic_system.demo.entities.Doctor;
 import clinic_system.demo.entities.Patient;
+import clinic_system.demo.exception.ResourceNotFoundException;
 import clinic_system.demo.service.AppointmentService;
 import jakarta.transaction.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,9 @@ public class AppointmentRestController {
 
     @GetMapping("/appointments/{appointmentId}")
     public Appointment getAppointment(@PathVariable int appointmentId) {
+        if(appointmentId < 0 || appointmentId > appointmentService.findAll().size()) {
+            throw new ResourceNotFoundException("Appointment", appointmentId);
+        }
         return appointmentService.findAppointmentById(appointmentId);
     }
 
