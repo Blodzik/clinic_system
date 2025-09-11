@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/doctor")
@@ -24,7 +25,7 @@ public class DoctorRestController {
     }
 
     @GetMapping("/doctors/{doctorId}")
-    public Doctor getDoctor(@PathVariable int doctorId) {
+    public Optional<Doctor> getDoctor(@PathVariable int doctorId) {
         if(doctorId < 0 || doctorId > doctorService.findAll().size()) {
             throw new ResourceNotFoundException("Doctor", doctorId);
         }

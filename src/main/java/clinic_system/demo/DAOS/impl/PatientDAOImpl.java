@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class PatientDAOImpl implements PatientDAO {
@@ -27,8 +28,9 @@ public class PatientDAOImpl implements PatientDAO {
     }
 
     @Override
-    public Patient findById(int id) {
-        return entityManager.find(Patient.class, id);
+    public Optional<Patient> findById(int id) {
+        Patient patient = entityManager.find(Patient.class, id);
+        return Optional.ofNullable(patient);
     }
 
     @Override

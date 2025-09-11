@@ -2,12 +2,14 @@ package clinic_system.demo.DAOS.impl;
 
 import clinic_system.demo.DAOS.AppointmentDAO;
 import clinic_system.demo.entities.Appointment;
+import clinic_system.demo.entities.Doctor;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -42,5 +44,23 @@ public class AppointmentDAOImpl implements AppointmentDAO {
         TypedQuery<Appointment> theQuery = entityManager.createQuery("FROM Appointment", Appointment.class);
         //return query
         return theQuery.getResultList();
+    }
+
+    @Override
+    public boolean existByDoctorAndTimeBetween(Doctor doctor, LocalDateTime start, LocalDateTime end) {
+        String jpql = """
+        SELECT COUNT(a) FROM Appointment a
+        WHERE a.doctor = :doctor
+          AND a.time < :end
+          AND a.time >= :start
+    """;
+
+        Long count = entityManager.createQuery(jpql, Long.class)
+                .setParameter("doctor", doctor)
+                .setParameter("start", start)
+                .setParameter("end", end)
+                .getSingleResult();
+
+        return count > 0;
     }
 }

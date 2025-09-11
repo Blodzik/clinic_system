@@ -6,11 +6,18 @@ import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
 import clinic_system.demo.entities.Doctor;
 import clinic_system.demo.entities.Patient;
+import clinic_system.demo.exception.DoctorNotAvailableException;
 import clinic_system.demo.exception.ResourceNotFoundException;
+import clinic_system.demo.request.AppointmentRequest;
+import clinic_system.demo.request.AvailabilityRequest;
 import clinic_system.demo.service.AppointmentService;
 import jakarta.transaction.Transactional;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -36,8 +43,29 @@ public class AppointmentRestController {
     }
 
     @PostMapping("/appointments")
-    public void addAppointment(@RequestBody Appointment appointment) {
-        appointment.setId(0);
-        appointmentService.addAppointment(appointment);
+    public void addAppointment(@RequestBody AppointmentRequest appointmentRequest) {
+        boolean available = appointmentService.isDoctorAvailable(
+        appointmentRequest.getDoctorId(),
+                appointmentRequest.getTime()
+        );
+
+        if (!available) {
+            throw new DoctorNotAvailableException("Doctor is not available at this time");
+        }
+
+        appointmentService.bookAppointment(
+                appointmentRequest.getPatientId(),
+                appointmentRequest.getDoctorId(),
+                appointmentRequest.getTime()
+        );
     }
+
+   @PostMapping("appointments/check-availability")
+    public boolean checkAvailability(@RequestBody AvailabilityRequest availabilityRequest) {
+        boolean available = appointmentService.isDoctorAvailable(
+                availabilityRequest.getDoctorId(),
+                availabilityRequest.getTime()
+        );
+        return available;
+   }
 }

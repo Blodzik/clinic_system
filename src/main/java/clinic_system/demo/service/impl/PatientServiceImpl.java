@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PatientServiceImpl implements PatientService {
@@ -25,7 +26,7 @@ public class PatientServiceImpl implements PatientService {
     }
 
     @Override
-    public Patient findById(int id) {
+    public Optional<Patient> findById(int id) {
         return patientDAO.findById(id);
     }
 

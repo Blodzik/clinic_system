@@ -30,4 +30,9 @@ public class ResourceRestExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(DoctorNotAvailableException.class)
+    public ResponseEntity<String> handleDoctorNotAvailable(DoctorNotAvailableException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
+    }
 }
