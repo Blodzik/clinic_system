@@ -26,11 +26,10 @@ public class PatientRestController {
     }
 
     @GetMapping("/patients/{patientId}")
-    public Optional<Patient> getPatientById(@PathVariable int patientId) {
-        if(patientId < 0 || patientId > patientService.findAll().size()) {
-            throw new ResourceNotFoundException("Patient", patientId);
-        }
-        return patientService.findById(patientId);
+    public Patient getPatientById(@PathVariable int patientId) {
+        return patientService.findById(patientId).orElseThrow(
+                () -> new ResourceNotFoundException("Patient", patientId)
+        );
     }
 
     @PostMapping("/patients")
@@ -40,5 +39,11 @@ public class PatientRestController {
         patientService.save(patient);
     }
 
-
+    @DeleteMapping("/patients/{patientId}")
+    public void deletePatient(@PathVariable int patientId) {
+        Patient patient = patientService.findById(patientId).orElseThrow(
+                () -> new ResourceNotFoundException("Patient", patientId)
+        );
+        patientService.deleteById(patientId);
+    }
 }

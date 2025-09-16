@@ -1,23 +1,13 @@
 package clinic_system.demo.rest;
 
-import clinic_system.demo.DAOS.AppointmentDAO;
-import clinic_system.demo.DAOS.DoctorDAO;
-import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
-import clinic_system.demo.entities.Doctor;
-import clinic_system.demo.entities.Patient;
 import clinic_system.demo.exception.DoctorNotAvailableException;
 import clinic_system.demo.exception.ResourceNotFoundException;
 import clinic_system.demo.request.AppointmentRequest;
 import clinic_system.demo.request.AvailabilityRequest;
 import clinic_system.demo.service.AppointmentService;
-import jakarta.transaction.Transactional;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -36,10 +26,9 @@ public class AppointmentRestController {
 
     @GetMapping("/appointments/{appointmentId}")
     public Appointment getAppointment(@PathVariable int appointmentId) {
-        if(appointmentId < 0 || appointmentId > appointmentService.findAll().size()) {
-            throw new ResourceNotFoundException("Appointment", appointmentId);
-        }
-        return appointmentService.findAppointmentById(appointmentId);
+        return appointmentService.findAppointmentById(appointmentId).orElseThrow(
+                () -> new ResourceNotFoundException("Appointment", appointmentId)
+        );
     }
 
     @PostMapping("/appointments")
@@ -68,4 +57,13 @@ public class AppointmentRestController {
         );
         return available;
    }
+
+   @DeleteMapping("appointments/{appointmentId}")
+    public void deleteAppointment(@PathVariable int appointmentId) {
+        Appointment appointment = appointmentService.findAppointmentById(appointmentId).orElseThrow(
+                () -> new ResourceNotFoundException("Appointment", appointmentId)
+        );
+        appointmentService.deleteAppointmentById(appointmentId);
+   }
+
 }

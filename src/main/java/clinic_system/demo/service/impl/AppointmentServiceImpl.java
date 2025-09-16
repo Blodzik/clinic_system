@@ -6,6 +6,7 @@ import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
 import clinic_system.demo.entities.Doctor;
 import clinic_system.demo.entities.Patient;
+import clinic_system.demo.exception.ResourceNotFoundException;
 import clinic_system.demo.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService {
@@ -35,7 +37,7 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     @Override
-    public Appointment findAppointmentById(int id) {
+    public Optional<Appointment> findAppointmentById(int id) {
         return appointmentDAO.findAppointmentById(id);
     }
 
@@ -53,8 +55,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     @Transactional
     public void bookAppointment(int patientId, int doctorId, LocalDateTime time) {
-        Patient patient = patientDAO.findById(patientId).orElseThrow(() -> new IllegalArgumentException("Invalid Patient ID"));
-        Doctor doctor = doctorDAO.findById(doctorId).orElseThrow(() -> new IllegalArgumentException("Invalid Doctor ID"));
+        Patient patient = patientDAO.findById(patientId).orElseThrow(() -> new ResourceNotFoundException("Patient", patientId));
+        Doctor doctor = doctorDAO.findById(doctorId).orElseThrow(() -> new ResourceNotFoundException("Doctor", doctorId));
 
         Appointment appointment = new Appointment(time, patient, doctor);
 
@@ -63,7 +65,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public boolean isDoctorAvailable(int doctorId, LocalDateTime time) {
-        Doctor doctor = doctorDAO.findById(doctorId).orElseThrow(() -> new IllegalArgumentException("Invalid Doctor ID"));
+        Doctor doctor = doctorDAO.findById(doctorId).orElseThrow(() -> new ResourceNotFoundException("Doctor", doctorId));
 
         //check if time passes
         LocalTime startTime = time.toLocalTime();
@@ -79,4 +81,5 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         return !busy;
     }
+
 }

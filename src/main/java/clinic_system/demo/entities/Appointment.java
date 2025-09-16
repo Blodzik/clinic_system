@@ -17,11 +17,13 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "patient_id", nullable = false,
                 foreignKey = @ForeignKey(name="fk_patient"))
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "doctor_id", nullable = false,
                 foreignKey = @ForeignKey(name="fk_doctor"))
+    @com.fasterxml.jackson.annotation.JsonIgnore
     private Doctor doctor;
 
     public Appointment() {}

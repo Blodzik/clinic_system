@@ -2,6 +2,9 @@ package clinic_system.demo.entities;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name="doctor")
 public class Doctor {
@@ -14,6 +17,11 @@ public class Doctor {
 
     @Column(name="specialization", nullable=false)
     private String specialization;
+
+    @OneToMany(mappedBy="doctor", cascade=CascadeType.ALL, orphanRemoval=true)
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private List<Appointment> appointments = new ArrayList<>();
+
 
     public Doctor() {}
 

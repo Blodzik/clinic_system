@@ -6,9 +6,10 @@ import clinic_system.demo.entities.Patient;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface AppointmentService {
-    Appointment findAppointmentById(int id);
+    Optional<Appointment> findAppointmentById(int id);
     void deleteAppointmentById(int id);
     List<Appointment> findAll();
     void bookAppointment(int patientId, int doctorId, LocalDateTime time);

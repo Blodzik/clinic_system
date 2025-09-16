@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class AppointmentDAOImpl implements AppointmentDAO {
@@ -28,8 +29,9 @@ public class AppointmentDAOImpl implements AppointmentDAO {
     }
 
     @Override
-    public Appointment findAppointmentById(int id) {
-        return entityManager.find(Appointment.class, id);
+    public Optional<Appointment> findAppointmentById(int id) {
+        Appointment appointment = entityManager.find(Appointment.class, id);
+        return Optional.ofNullable(appointment);
     }
 
     @Override

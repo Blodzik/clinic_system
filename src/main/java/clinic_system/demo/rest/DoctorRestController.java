@@ -25,17 +25,24 @@ public class DoctorRestController {
     }
 
     @GetMapping("/doctors/{doctorId}")
-    public Optional<Doctor> getDoctor(@PathVariable int doctorId) {
-        if(doctorId < 0 || doctorId > doctorService.findAll().size()) {
-            throw new ResourceNotFoundException("Doctor", doctorId);
-        }
-        return doctorService.findById(doctorId);
+    public Doctor getDoctor(@PathVariable int doctorId) {
+        return doctorService.findById(doctorId).orElseThrow(
+                () -> new ResourceNotFoundException("Doctor", doctorId)
+        );
     }
 
-    @PostMapping("doctors")
+    @PostMapping("/doctors")
     public void saveDoctor(@RequestBody Doctor doctor) {
         doctor.setId(0);
 
         doctorService.save(doctor);
+    }
+
+    @DeleteMapping("/doctors/{doctorId}")
+    public void deleteDoctor(@PathVariable int doctorId) {
+        Doctor doctor = doctorService.findById(doctorId).orElseThrow(
+                () -> new ResourceNotFoundException("Doctor", doctorId)
+        );
+        doctorService.deleteById(doctorId);
     }
 }

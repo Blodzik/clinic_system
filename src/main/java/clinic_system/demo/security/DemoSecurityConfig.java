@@ -5,36 +5,19 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+
+import javax.sql.DataSource;
 
 @Configuration
 public class DemoSecurityConfig {
 
+    //add support for jdbc
     @Bean
-    public InMemoryUserDetailsManager userDetailsManager() {
-
-        UserDetails nazar = User.builder()
-                .username("nazar")
-                .password("{noop}test123")
-                .roles("EMPLOYEE", "MANAGER", "ADMIN")
-                .build();
-
-        UserDetails adrian = User.builder()
-                .username("adrian")
-                .password("{noop}test123")
-                .roles("EMPLOYEE", "MANAGER")
-                .build();
-
-        UserDetails vitalik = User.builder()
-                .username("vitalik")
-                .password("{noop}test123")
-                .roles("EMPLOYEE")
-                .build();
-
-        return new InMemoryUserDetailsManager(nazar, adrian, vitalik);
+    public UserDetailsManager userDetailsManager(DataSource dataSource) {
+        return new JdbcUserDetailsManager(dataSource);
     }
 
     @Bean
@@ -44,9 +27,17 @@ public class DemoSecurityConfig {
                 configuer
                         .requestMatchers(HttpMethod.GET, "/patient/patients").hasRole("EMPLOYEE")
                         .requestMatchers(HttpMethod.GET, "/patient/patients/**").hasRole("EMPLOYEE")
-                        .requestMatchers(HttpMethod.POST, "patient/patients").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "patient/patients").hasRole("Manager")
-                        .requestMatchers(HttpMethod.DELETE, "patient/patients/**").hasRole("Admin")
+                        .requestMatchers(HttpMethod.POST, "/patient/patients").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/patient/patients/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/doctor/doctors").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.GET, "/doctor/doctors/**").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.POST, "/doctor/doctors").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/doctor/doctors/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/appointment/appointments").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.GET, "/appointment/appointments/**").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.POST, "/appointment/appointments").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/appointment/appointments/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/appointment/appointments/check-availability").hasRole("EMPLOYEE")
                 );
 
         // use HTTP Basic authentication
@@ -58,4 +49,30 @@ public class DemoSecurityConfig {
 
         return http.build();
     }
+
+
+
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsManager() {
+//
+//        UserDetails nazar = User.builder()
+//                .username("nazar")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE", "MANAGER", "ADMIN")
+//                .build();
+//
+//        UserDetails adrian = User.builder()
+//                .username("adrian")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE", "MANAGER")
+//                .build();
+//
+//        UserDetails vitalik = User.builder()
+//                .username("vitalik")
+//                .password("{noop}test123")
+//                .roles("EMPLOYEE")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(nazar, adrian, vitalik);
+//    }
 }
