@@ -14,4 +14,5 @@ public interface AppointmentService {
     List<Appointment> findAll();
     void bookAppointment(int patientId, int doctorId, LocalDateTime time);
     boolean isDoctorAvailable(int doctorId, LocalDateTime time);
+    public void updateAppointment(int id, int patientId, int doctorId, LocalDateTime time);
 }

@@ -38,6 +38,8 @@ public class DemoSecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/appointment/appointments").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/appointment/appointments/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/appointment/appointments/check-availability").hasRole("EMPLOYEE")
+                        .requestMatchers(HttpMethod.GET, "/hello").permitAll()
+                        .anyRequest().permitAll()
                 );
 
         // use HTTP Basic authentication

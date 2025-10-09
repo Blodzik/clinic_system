@@ -6,6 +6,7 @@ import clinic_system.demo.DAOS.PatientDAO;
 import clinic_system.demo.entities.Appointment;
 import clinic_system.demo.entities.Doctor;
 import clinic_system.demo.entities.Patient;
+import clinic_system.demo.exception.AppointmentNotFoundException;
 import clinic_system.demo.exception.ResourceNotFoundException;
 import clinic_system.demo.service.AppointmentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,18 @@ public class AppointmentServiceImpl implements AppointmentService {
         boolean busy = appointmentDAO.existByDoctorAndTimeBetween(doctor, time, endDateTime);
 
         return !busy;
+    }
+
+    public void updateAppointment(int id, int patientId, int doctorId, LocalDateTime time) {
+        Appointment appointment = appointmentDAO.findAppointmentById(id).orElseThrow(() -> new ResourceNotFoundException("Appointment", id));
+
+        appointment.setPatient(patientDAO.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found")));
+        appointment.setDoctor(doctorDAO.findById(doctorId)
+                .orElseThrow(() -> new RuntimeException("Doctor not found")));
+        appointment.setTime(time);
+
+        appointmentDAO.addAppointment(appointment);
     }
 
 }

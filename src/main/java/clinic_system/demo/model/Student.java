@@ -1,4 +1,4 @@
-package model;
+package clinic_system.demo.model;
 
 public class Student {
     private String firstName;

@@ -23,7 +23,7 @@ public class DoctorDAOImpl implements DoctorDAO {
     @Override
     @Transactional
     public void save(Doctor doctor) {
-        entityManager.persist(doctor);
+        entityManager.merge(doctor);
     }
 
     @Override

@@ -24,7 +24,7 @@ public class PatientDAOImpl implements PatientDAO {
     @Override
     @Transactional
     public void save(Patient patient) {
-        entityManager.persist(patient);
+        entityManager.merge(patient);
     }
 
     @Override
